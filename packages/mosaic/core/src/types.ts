@@ -99,4 +99,8 @@ export interface Logger {
   group(label?: unknown): void;
   groupCollapsed(label?: unknown): void;
   groupEnd(): void;
+  // time tracking methods for timestamping
+  time(label?: string): void;
+  timeLog(label?: string): void;
+  timeEnd(label?: string): void;
 }

@@ -7,6 +7,9 @@ interface Logger {
   group(label?: string): void;
   groupCollapsed(label?: string): void;
   groupEnd(): void;
+  time(label?: string): void;
+  timeLog(label?: string): void;
+  timeEnd(label?: string): void;
 }
 
 export function voidLogger(): Logger {
@@ -18,6 +21,9 @@ export function voidLogger(): Logger {
     error(): void {},
     group(): void {},
     groupCollapsed(): void {},
-    groupEnd(): void {}
+    groupEnd(): void {},
+    time(): void { },
+    timeLog(): void {},
+    timeEnd(): void {}
   };
 }

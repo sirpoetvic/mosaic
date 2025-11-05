@@ -41,7 +41,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2",
     "vite": "^7.1.12",
-    "vitepress": "1.6.4",
+    "vitepress": "^0.1.1",
     "vitest": "^4.0.5",
     "yaml": "^2.8.1"
   },
@@ -50,5 +50,8 @@
     "packages/server/*",
     "packages/vgplot/*",
     "packages/examples/*"
-  ]
+  ],
+  "dependencies": {
+    "@uwdata/mosaic-core": "^0.21.1"
+  }
 }

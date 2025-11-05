@@ -19,6 +19,8 @@ export class QueryManager {
   public pendingResults: QueryResult[];
   private maxConcurrentRequests: number;
   private pendingExec: boolean;
+  private _timeLoggerString: string;
+  private _timerStarted: boolean;
 
   constructor(maxConcurrentRequests: number = 32) {
     this.queue = new PriorityQueue(3);
@@ -30,6 +32,8 @@ export class QueryManager {
     this.pendingResults = [];
     this.maxConcurrentRequests = maxConcurrentRequests;
     this.pendingExec = false;
+    this._timeLoggerString = 'Query Time';
+    this._timerStarted = false;
   }
 
   next(): void {
@@ -95,6 +99,11 @@ export class QueryManager {
       const t0 = performance.now();
       if (this._logQueries) {
         this._logger.debug('Query', { type, sql, ...options });
+        if (!this._timerStarted) {
+          this._logger.time(this._timeLoggerString); // start timer
+          this._timerStarted = true;
+        }
+        this._logger.timeLog(this._timeLoggerString); // print time since start
       }
 
       // @ts-expect-error type may be exec | json | arrow
@@ -105,7 +114,7 @@ export class QueryManager {
 
       if (cache) this.clientCache!.set(sql!, data);
 
-      this._logger.debug(`Request: ${(performance.now() - t0).toFixed(1)}`);
+      // this._logger.debug(`Request: ${(performance.now() - t0).toFixed(1)}`);
       result.ready(type === 'exec' ? null : data);
     } catch (err) {
       result.reject(err);

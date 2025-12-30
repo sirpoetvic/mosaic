@@ -1,16 +1,4 @@
-interface Logger {
-  debug(...args: unknown[]): void;
-  info(...args: unknown[]): void;
-  log(...args: unknown[]): void;
-  warn(...args: unknown[]): void;
-  error(...args: unknown[]): void;
-  group(label?: string): void;
-  groupCollapsed(label?: string): void;
-  groupEnd(): void;
-  time(label?: string): void;
-  timeLog(label?: string): void;
-  timeEnd(label?: string): void;
-}
+import type { Logger } from '../types.js';
 
 export function voidLogger(): Logger {
   return {
@@ -22,7 +10,7 @@ export function voidLogger(): Logger {
     group(): void {},
     groupCollapsed(): void {},
     groupEnd(): void {},
-    time(): void { },
+    time(): void {},
     timeLog(): void {},
     timeEnd(): void {}
   };

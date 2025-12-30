@@ -5,6 +5,8 @@ import { lruCache, voidCache } from './util/cache.js';
 import { PriorityQueue } from './util/priority-queue.js';
 import { QueryResult, QueryState } from './util/query-result.js';
 import { voidLogger } from './util/void-logger.js';
+import { time } from '@uwdata/flechette';
+import { timeLogger } from './util/time-logger.js';
 
 export const Priority = Object.freeze({ High: 0, Normal: 1, Low: 2 });
 
@@ -26,7 +28,7 @@ export class QueryManager {
     this.queue = new PriorityQueue(3);
     this.db = null;
     this.clientCache = null;
-    this._logger = voidLogger();
+    this._logger = timeLogger().logger;
     this._logQueries = false;
     this._consolidate = null;
     this.pendingResults = [];
@@ -96,14 +98,15 @@ export class QueryManager {
       }
 
       // issue query, potentially cache result
-      const t0 = performance.now();
-      if (this._logQueries) {
+      const t0 = Date.now();
+      if (this._logQueries) { 
         this._logger.debug('Query', { type, sql, ...options });
         if (!this._timerStarted) {
           this._logger.time(this._timeLoggerString); // start timer
           this._timerStarted = true;
         }
         this._logger.timeLog(this._timeLoggerString); // print time since start
+        this._logger.debug(`Current Time: ${(Date.now())}ms`);
       }
 
       // @ts-expect-error type may be exec | json | arrow
@@ -114,7 +117,6 @@ export class QueryManager {
 
       if (cache) this.clientCache!.set(sql!, data);
 
-      // this._logger.debug(`Request: ${(performance.now() - t0).toFixed(1)}`);
       result.ready(type === 'exec' ? null : data);
     } catch (err) {
       result.reject(err);
